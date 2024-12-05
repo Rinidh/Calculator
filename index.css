@@ -1,6 +1,7 @@
 body {
   all: unset;
   background-color: rgb(233, 233, 233);
+  font-family: Calibri;
 }
 
 main {
@@ -26,7 +27,6 @@ main {
   align-items: center;
   font-size: xx-large;
   font-weight: 300;
-  font-family: Calibri;
   border: 1px solid rgb(172, 172, 172);
   background-color: rgb(241, 241, 241);
 }
@@ -35,8 +35,15 @@ main {
 }
 
 .screen {
+  padding: 0px 20px;
   background-color: rgb(46, 46, 46);
+  color: whitesmoke;
   grid-column: 1 / span 4;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  font-size: 50px;
+  font-weight: 200;
 }
 
 .arithmetic-operator {
