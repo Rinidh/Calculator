@@ -5,7 +5,11 @@ buttons.forEach(button => {
   //actions for buttons having number inputs
   if (button.id && button.id !== "button-dot" && button.id !== "button-clear") {
     button.addEventListener("click", e => {
-      screen.innerText += e.target.innerText;
+      if (screen.innerText === "0") {
+        screen.innerText = e.target.innerText;
+      } else {
+        screen.innerText += e.target.innerText;
+      }
     })
   }
 
@@ -17,4 +21,12 @@ buttons.forEach(button => {
       }
     })
   }
+
+  //actions for clear button
+  if (button.id === "button-clear") {
+    button.addEventListener("click", e => {
+      screen.innerText = "0"
+    })
+  }
+
 })
