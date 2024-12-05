@@ -1,0 +1,56 @@
+body {
+  all: unset;
+  background-color: rgb(233, 233, 233);
+}
+
+main {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(170, 213, 215)
+}
+
+.outer {
+  height: auto;
+  width: 400px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: 95px repeat(5, 70px);
+  overflow: hidden;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+  font-weight: 300;
+  font-family: Calibri;
+  border: 1px solid rgb(172, 172, 172);
+  background-color: rgb(241, 241, 241);
+}
+.button:active {
+  background-color: rgb(220, 220, 220);
+}
+
+.screen {
+  background-color: rgb(46, 46, 46);
+  grid-column: 1 / span 4;
+}
+
+.arithmetic-operator {
+  background-color: rgb(226, 226, 226);
+}
+.arithmetic-operator:active {
+  background-color: rgb(201, 199, 199);
+}
+
+.equals-operator {
+  background-color: rgb(227, 121, 40);
+  grid-row: 3 / span 4;
+  grid-column: 4;
+}
+.equals-operator:active {
+  background-color: rgb(212, 111, 33); 
+}
