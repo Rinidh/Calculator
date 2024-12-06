@@ -53,6 +53,7 @@ buttons.forEach(button => {
     button.addEventListener("click", e => {
       const result = doCalculation(firstValue, secondValue, arithmeticOperator);
       screen.innerText = result;
+      resetVariables();
     })
   }
 })
@@ -81,4 +82,9 @@ function doCalculation(firstValue, secondValue, arithmeticOperator) {
     case "÷":
       return parseInt(firstValue) / parseInt(secondValue)
   }
+}
+function resetVariables() {
+  valuePosition = 1;
+  firstValue = "";
+  secondValue = "";
 }
