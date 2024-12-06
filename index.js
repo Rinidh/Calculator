@@ -1,7 +1,7 @@
 const buttons = document.querySelectorAll("button")
 const screen = document.getElementsByClassName("screen")[0]
 
-console.log(buttons);
+// console.log(buttons);
 
 let valuePosition = 1; //stores the position of argument eg in 27+34, 27 has valuePositon of 1 and 34 has valuePosition of 2
 let firstValue = ""; //first temporarily store values in string form to prevent += operator from adding the input numbers eg 5, 2 should be 52, not 7
@@ -47,9 +47,17 @@ buttons.forEach(button => {
       screen.innerText = e.target.innerText;
     })
   }
+
+  // //actions for equals button
+  if (button.classList.contains("equals-operator")) {
+    button.addEventListener("click", e => {
+      const result = doCalculation(firstValue, secondValue, arithmeticOperator);
+      screen.innerText = result;
+    })
+  }
 })
 
-document.addEventListener("click", () => console.log(valuePosition, firstValue, secondValue, arithmeticOperator))
+// document.addEventListener("click", () => console.log(valuePosition, firstValue, secondValue, arithmeticOperator))
 
 
 function storeValue(value) {
@@ -61,4 +69,16 @@ function storeValue(value) {
 }
 function changeValuePosition(newPosition) {
   valuePosition = newPosition;
+}
+function doCalculation(firstValue, secondValue, arithmeticOperator) {
+  switch (arithmeticOperator) {
+    case "+":
+      return parseInt(firstValue) + parseInt(secondValue)
+    case "-":
+      return parseInt(firstValue) - parseInt(secondValue)
+    case "×":
+      return parseInt(firstValue) * parseInt(secondValue)
+    case "÷":
+      return parseInt(firstValue) / parseInt(secondValue)
+  }
 }
