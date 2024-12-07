@@ -12,14 +12,19 @@ keysDiv.addEventListener("click", e => {
     const displayedNum = display.textContent
 
     if (!action) {
-      if (displayedNum === '0') {
+      const previousKeyType = calculator.dataset.previousKeyType;
+
+      if (displayedNum === '0' || previousKeyType === 'operator') {
         display.textContent = keyContent
       } else {
         display.textContent = displayedNum + keyContent //not addition but concatenation in strings
       }
+
+      calculator.dataset.previousKeyType = 'digit' //to reset the custom dataset because now the last key pressed is not an operator key 
     }
     if (action === "add" || action === "multiply" || action === "subtract" || action === "divide") {
-      key.classList.add("is-depressed")
+      key.classList.add("is-depressed");
+      calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
     }
     if (action === "decimal") {
       display.textContent = displayedNum + '.'
