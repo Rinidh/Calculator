@@ -19,7 +19,7 @@ keysDiv.addEventListener("click", e => {
       }
     }
     if (action === "add" || action === "multiply" || action === "subtract" || action === "divide") {
-      console.log("an operator")
+      key.classList.add("is-depressed")
     }
     if (action === "decimal") {
       display.textContent = displayedNum + '.'
@@ -32,6 +32,14 @@ keysDiv.addEventListener("click", e => {
       console.log('equals button');
 
     }
+
+    //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
+    const keys = Array.from(keysDiv.children)
+    const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
+    operatorKeys
+      .forEach(k => {
+        k.classList.remove('is-depressed')
+      })
   }
 })
 
