@@ -25,6 +25,8 @@ keysDiv.addEventListener("click", e => {
     if (action === "add" || action === "multiply" || action === "subtract" || action === "divide") {
       key.classList.add("is-depressed");
       calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
+      calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
+      calculator.dataset.operator = action
     }
     if (action === "decimal") {
       display.textContent = displayedNum + '.'
@@ -34,8 +36,12 @@ keysDiv.addEventListener("click", e => {
 
     }
     if (action === 'calculate') {
-      console.log('equals button');
+      const firstValue = calculator.dataset.firstValue
+      const secondValue = displayedNum //the 2nd set of digits on screen after the operator was clicked
+      const operator = calculator.dataset.operator
 
+      const result = calculate(firstValue, operator, secondValue)
+      display.textContent = result;
     }
 
     //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
@@ -48,4 +54,19 @@ keysDiv.addEventListener("click", e => {
   }
 })
 
+function calculate(firstNum, operation, secondNum) {
+  let result;
+
+  if (operation === 'add') {
+    result = parseFloat(firstNum) + parseFloat(secondNum);
+  } else if (operation === 'subtract') {
+    result = parseFloat(firstNum) - parseFloat(secondNum);
+  } else if (operation === 'multiply') {
+    result = parseFloat(firstNum) * parseFloat(secondNum);
+  } else if (operation === 'divide') {
+    result = parseFloat(firstNum) / parseFloat(secondNum);
+  }
+
+  return result;
+}
 
