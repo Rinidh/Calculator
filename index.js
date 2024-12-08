@@ -10,30 +10,41 @@ keysDiv.addEventListener("click", e => {
     const action = key.dataset.action
     const keyContent = key.textContent
     const displayedNum = display.textContent
+    const previousKeyType = calculator.dataset.previousKeyType;
+    // console.log(previousKeyType);
 
     if (!action) {
-      const previousKeyType = calculator.dataset.previousKeyType;
-
       if (displayedNum === '0' || previousKeyType === 'operator') {
         display.textContent = keyContent
       } else {
         display.textContent = displayedNum + keyContent //not addition but concatenation in strings
       }
 
-      calculator.dataset.previousKeyType = 'digit' //to reset the custom dataset because now the last key pressed is not an operator key 
+      calculator.dataset.previousKeyType = 'number' //to reset the custom dataset because now the last key pressed is not an operator key 
     }
     if (action === "add" || action === "multiply" || action === "subtract" || action === "divide") {
       key.classList.add("is-depressed");
-      calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
       calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
       calculator.dataset.operator = action
+
+      calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
+      console.log('set to operator');
+
     }
     if (action === "decimal") {
-      display.textContent = displayedNum + '.'
+      if (!displayedNum.includes('.')) {
+        display.textContent = displayedNum + '.'
+      }
+      if (previousKeyType === 'operator') {
+        display.textContent = '0.' //if a user directly hits the decimal after an operator, he'd mean 'zero point something'
+      }
+
+      calculator.dataset.previousKeyType = "decimal"
     }
     if (action === 'clear') {
       console.log('ac button');
 
+      calculator.dataset.previousKeyType = 'clear'
     }
     if (action === 'calculate') {
       const firstValue = calculator.dataset.firstValue
@@ -42,6 +53,8 @@ keysDiv.addEventListener("click", e => {
 
       const result = calculate(firstValue, operator, secondValue)
       display.textContent = result;
+
+      calculator.dataset.previousKeyType = 'calculate'
     }
 
     //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
