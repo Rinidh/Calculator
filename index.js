@@ -23,6 +23,14 @@ keysDiv.addEventListener("click", e => {
       calculator.dataset.previousKeyType = 'number' //to reset the custom dataset because now the last key pressed is not an operator key 
     }
     if (action === "add" || action === "multiply" || action === "subtract" || action === "divide") {
+      const firstValue = calculator.dataset.firstValue
+      const operator = calculator.dataset.operator
+      const secondValue = display.textContent
+
+      if (firstValue && operator && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
+        display.textContent = calculate(firstValue, operator, secondValue)
+      }
+
       key.classList.add("is-depressed");
       calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
       calculator.dataset.operator = action
