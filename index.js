@@ -36,8 +36,6 @@ keysDiv.addEventListener("click", e => {
       calculator.dataset.operator = action
 
       calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
-      console.log('set to operator');
-
     }
     if (action === "decimal") {
       if (!displayedNum.includes('.')) {
@@ -55,13 +53,20 @@ keysDiv.addEventListener("click", e => {
       calculator.dataset.previousKeyType = 'clear'
     }
     if (action === 'calculate') {
-      const firstValue = calculator.dataset.firstValue
-      const secondValue = displayedNum //the 2nd set of digits on screen after the operator was clicked
+      let firstValue = calculator.dataset.firstValue
+      let secondValue = displayedNum //the 2nd set of digits on screen after the operator was clicked
       const operator = calculator.dataset.operator
 
-      const result = calculate(firstValue, operator, secondValue)
-      display.textContent = result;
+      if (firstValue) {
+        if (previousKeyType === 'calculate') {
+          firstValue = displayedNum;
+          secondValue = calculator.dataset.modifierVal //the secondValue of the previous operation used again upon clicking equals button again & again
+        }
+        const result = calculate(firstValue, operator, secondValue)
+        display.textContent = result;
+      }
 
+      calculator.dataset.modifierVal = secondValue;
       calculator.dataset.previousKeyType = 'calculate'
     }
 
