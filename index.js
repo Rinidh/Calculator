@@ -1,6 +1,7 @@
 const calculator = document.querySelector(".calculator")
 const keysDiv = document.querySelector(".calculator__keys")
 const display = document.querySelector('.calculator__display')
+const clearButton = document.querySelector('[data-action=clear]') //access elements holding particular dataset
 
 keysDiv.addEventListener("click", e => {
   if (e.target.matches('button')) {
@@ -14,7 +15,7 @@ keysDiv.addEventListener("click", e => {
     // console.log(previousKeyType);
 
     if (!action) {
-      if (displayedNum === '0' || previousKeyType === 'operator') {
+      if (displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate') {
         display.textContent = keyContent
       } else {
         display.textContent = displayedNum + keyContent //not addition but concatenation in strings
@@ -41,16 +42,26 @@ keysDiv.addEventListener("click", e => {
       if (!displayedNum.includes('.')) {
         display.textContent = displayedNum + '.'
       }
-      if (previousKeyType === 'operator') {
+      if (previousKeyType === 'operator' || previousKeyType === 'calculate') {
         display.textContent = '0.' //if a user directly hits the decimal after an operator, he'd mean 'zero point something'
       }
 
       calculator.dataset.previousKeyType = "decimal"
     }
     if (action === 'clear') {
-      console.log('ac button');
+      if (key.textContent === 'AC') { //reset the stored data appropriately
+        calculator.dataset.firstValue = '';
+        calculator.dataset.operator = '';
+        calculator.dataset.modifierVal = '';
+      } else {
+        key.textContent = 'AC'
+      }
+      display.textContent = 0
 
       calculator.dataset.previousKeyType = 'clear'
+    }
+    if (action !== 'clear') { //if any button apart from 'clear', change AC to CE
+      clearButton.textContent = 'CE';
     }
     if (action === 'calculate') {
       let firstValue = calculator.dataset.firstValue
