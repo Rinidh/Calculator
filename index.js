@@ -92,18 +92,13 @@ keysDiv.addEventListener("click", e => {
 })
 
 function calculate(firstNum, operation, secondNum) {
-  let result;
+  const value1 = parseFloat(firstNum)
+  const value2 = parseFloat(secondNum)
 
-  if (operation === 'add') {
-    result = parseFloat(firstNum) + parseFloat(secondNum);
-  } else if (operation === 'subtract') {
-    result = parseFloat(firstNum) - parseFloat(secondNum);
-  } else if (operation === 'multiply') {
-    result = parseFloat(firstNum) * parseFloat(secondNum);
-  } else if (operation === 'divide') {
-    result = parseFloat(firstNum) / parseFloat(secondNum);
-  }
-
-  return result;
+  //early return pattern (alternatively use switch case)
+  if (operation === 'add') return value1 + value2
+  if (operation === 'subtract') return value1 - value2
+  if (operation === 'multiply') return value1 * value2
+  if (operation === 'divide') return value1 / value2
 }
 
