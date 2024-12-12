@@ -9,21 +9,19 @@ keysDiv.addEventListener("click", e => {
   //all code below re-runs on each button-click
 
   const key = e.target
-  const action = key.dataset.action
+  const { action } = key.dataset
   const displayedNum = display.textContent
 
   //Handling the pure functions (arithmetic to performs) with createResultString() and showing result on display
   display.textContent = createResultString(key, displayedNum, calculator.dataset)
 
   //Handling the impure part (changing other variables accordingly)
-  if (!action) {
+  const keyType = getKeyType(key)
+
+  if (keyType === "number") {
     calculator.dataset.previousKeyType = 'number' //to reset the custom dataset because now the last key pressed is not an operator key 
   }
-  if (action === "add" ||
-    action === "multiply" ||
-    action === "subtract" ||
-    action === "divide"
-  ) {
+  if (keyType === "operator") {
     key.classList.add("is-depressed");
     calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
     calculator.dataset.operator = action
@@ -74,14 +72,12 @@ function calculate(firstNum, operation, secondNum) {
 }
 
 const createResultString = (key, displayedNum, state) => { //state param requires passing calculator.dataset, which is like holding the current state of the calculator
-  const action = key.dataset.action
-  const previousKeyType = state.previousKeyType
+  const { action } = key.dataset
   const keyContent = key.textContent
-  const firstValue = state.firstValue
-  const operator = state.operator
-  const modifierVal = state.modifierVal
+  const { previousKeyType, firstValue, operator, modifierVal } = state
+  const keyType = getKeyType(key)
 
-  if (!action) {
+  if (keyType === "number") {
     return displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate'
       ? keyContent
       : displayedNum + keyContent //not addition but concatenation in strings
@@ -91,11 +87,7 @@ const createResultString = (key, displayedNum, state) => { //state param require
     if (previousKeyType === 'operator' || previousKeyType === 'calculate') return '0.' //if a user directly hits the decimal after an operator, he'd mean 'zero point something'
     return displayedNum; //if none of above match, createResultString() should not return displayedNum instead of undefined
   }
-  if (action === "add" ||
-    action === "multiply" ||
-    action === "subtract" ||
-    action === "divide"
-  ) {
+  if (keyType === "operator") {
     return (firstValue &&
       operator &&
       previousKeyType !== 'operator' &&
@@ -116,3 +108,14 @@ const createResultString = (key, displayedNum, state) => { //state param require
   }
 }
 
+const getKeyType = (key) => {
+  const { action } = key.dataset
+
+  if (!action) return "number"
+  if (action === "add" ||
+    action === "multiply" ||
+    action === "subtract" ||
+    action === "divide"
+  ) return "operator"
+  return action //for others ie decimal, calculate, clear, they are already easy to read / consistent, so just return them
+}
