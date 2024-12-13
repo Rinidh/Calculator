@@ -16,39 +16,46 @@ keysDiv.addEventListener("click", e => {
   display.textContent = createResultString(key, displayedNum, calculator.dataset)
 
   //Handling the impure part (changing other variables accordingly)
-  const keyType = getKeyType(key)
 
-  if (keyType === "number") {
-    calculator.dataset.previousKeyType = 'number' //to reset the custom dataset because now the last key pressed is not an operator key 
-  }
+  // ...
+})
+
+const updateCalculatorState = () => {
+  /*
+  required vars:
+
+  key
+  firstValue
+  previousKeyType
+  modifierVal
+  displayedNum
+  */
+
+  const keyType = getKeyType(key)
+  calculator.dataset.previousKeyType = keyType //set previous keyType at one point instead of in each case below
+
   if (keyType === "operator") {
     key.classList.add("is-depressed");
     calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
     calculator.dataset.operator = action
-
-    calculator.dataset.previousKeyType = 'operator' //record in the dataset of calculator div that the last pressed key was an operator, to refer to when updating the display
-  }
-  if (action === "decimal") {
-    calculator.dataset.previousKeyType = "decimal"
   }
   if (action === 'clear') {
     if (key.textContent === 'AC') { //reset the stored data appropriately
       calculator.dataset.firstValue = '';
       calculator.dataset.operator = '';
       calculator.dataset.modifierVal = '';
+      calculator.dataset.previousKeyType = ''
     } else {
       key.textContent = 'AC'
     }
-
-    calculator.dataset.previousKeyType = 'clear'
   }
   if (action !== 'clear') { //if any button apart from 'clear', change AC to CE
     clearButton.textContent = 'CE';
   }
   if (action === 'calculate') {
-
-    calculator.dataset.modifierVal = secondValue;
-    calculator.dataset.previousKeyType = 'calculate'
+    calculator.dataset.modifierVal = firstValue && previousKeyType === 'calculate'
+      ? modifierVal
+      : displayedNum
   }
 
   //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
@@ -58,7 +65,7 @@ keysDiv.addEventListener("click", e => {
     .forEach(k => {
       k.classList.remove('is-depressed')
     })
-})
+}
 
 function calculate(firstNum, operation, secondNum) {
   const value1 = parseFloat(firstNum)
