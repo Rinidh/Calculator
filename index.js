@@ -40,6 +40,8 @@ const updateCalculatorState = (key, state, displayedNum) => {
       ? modifierVal
       : displayedNum
   }
+
+  updateVisualState(key, calculator)
 }
 
 const createResultString = (key, displayedNum, state) => { //state param requires passing calculator.dataset, which is like holding the current state of the calculator
@@ -101,15 +103,18 @@ function calculate(firstNum, operation, secondNum) {
   if (operation === 'divide') return value1 / value2
 }
 
-function updateVisualState() {
+function updateVisualState(key, calculator) {
+  const keyType = getKeyType(key)
+
   if (keyType === 'operator') key.classList.add("is-depressed");
-  if (keyType === 'clear' && !(key.textContent === 'AC')) key.textContent = 'AC'
+  if (keyType === 'clear' && key.textContent !== 'AC') key.textContent = 'AC'
   if (keyType !== 'clear') { //if any button apart from 'clear', change AC to CE
+    const clearButton = calculator.querySelector('[data-action=clear]') //better access the calculator as arg and access the clearButton from it. This makes updateVisualState() reusable in different projects
     clearButton.textContent = 'CE';
   }
 
   //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
-  const keys = Array.from(keysDiv.children)
+  const keys = Array.from(key.parentNode.children) //easier not to use keysDiv (as we have to set it as param also) and rather access all keys from the single key in the param/argument
   const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
   operatorKeys
     .forEach(k => {
