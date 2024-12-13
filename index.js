@@ -24,51 +24,25 @@ const updateCalculatorState = (key, state, displayedNum) => {
   calculator.dataset.previousKeyType = keyType //set previous keyType at one point instead of in each case below
 
   if (keyType === "operator") {
-    key.classList.add("is-depressed");
     calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
     calculator.dataset.operator = action
   }
-  if (action === 'clear') {
+  if (keyType === 'clear') {
     if (key.textContent === 'AC') { //reset the stored data appropriately
       calculator.dataset.firstValue = '';
       calculator.dataset.operator = '';
       calculator.dataset.modifierVal = '';
       calculator.dataset.previousKeyType = ''
-    } else {
-      key.textContent = 'AC'
     }
   }
-  if (action !== 'clear') { //if any button apart from 'clear', change AC to CE
-    clearButton.textContent = 'CE';
-  }
-  if (action === 'calculate') {
+  if (keyType === 'calculate') {
     calculator.dataset.modifierVal = firstValue && previousKeyType === 'calculate'
       ? modifierVal
       : displayedNum
   }
-
-  //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
-  const keys = Array.from(keysDiv.children)
-  const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
-  operatorKeys
-    .forEach(k => {
-      k.classList.remove('is-depressed')
-    })
-}
-
-function calculate(firstNum, operation, secondNum) {
-  const value1 = parseFloat(firstNum)
-  const value2 = parseFloat(secondNum)
-
-  //early return pattern (alternatively use switch case)
-  if (operation === 'add') return value1 + value2
-  if (operation === 'subtract') return value1 - value2
-  if (operation === 'multiply') return value1 * value2
-  if (operation === 'divide') return value1 / value2
 }
 
 const createResultString = (key, displayedNum, state) => { //state param requires passing calculator.dataset, which is like holding the current state of the calculator
-  const { action } = key.dataset
   const keyContent = key.textContent
   const { previousKeyType, firstValue, operator, modifierVal } = state
   const keyType = getKeyType(key)
@@ -78,7 +52,7 @@ const createResultString = (key, displayedNum, state) => { //state param require
       ? keyContent
       : displayedNum + keyContent //not addition but concatenation in strings
   }
-  if (action === "decimal") {
+  if (keyType === "decimal") {
     if (!displayedNum.includes('.')) return displayedNum + '.'
     if (previousKeyType === 'operator' || previousKeyType === 'calculate') return '0.' //if a user directly hits the decimal after an operator, he'd mean 'zero point something'
     return displayedNum; //if none of above match, createResultString() should not return displayedNum instead of undefined
@@ -92,10 +66,10 @@ const createResultString = (key, displayedNum, state) => { //state param require
       : displayedNum //in order not to return undefined if all conditions fail
 
   }
-  if (action === "clear") {
+  if (keyType === "clear") {
     return 0;
   }
-  if (action === "calculate") {
+  if (keyType === "calculate") {
     return (firstValue)
       ? (previousKeyType === 'calculate') //if firstValue is truthy then run either calculate function, or else displayedNum
         ? calculate(displayedNum, operator, modifierVal)
@@ -114,4 +88,31 @@ const getKeyType = (key) => {
     action === "divide"
   ) return "operator"
   return action //for others ie decimal, calculate, clear, they are already easy to read / consistent, so just return them
+}
+
+function calculate(firstNum, operation, secondNum) {
+  const value1 = parseFloat(firstNum)
+  const value2 = parseFloat(secondNum)
+
+  //early return pattern (alternatively use switch case)
+  if (operation === 'add') return value1 + value2
+  if (operation === 'subtract') return value1 - value2
+  if (operation === 'multiply') return value1 * value2
+  if (operation === 'divide') return value1 / value2
+}
+
+function updateVisualState() {
+  if (keyType === 'operator') key.classList.add("is-depressed");
+  if (keyType === 'clear' && !(key.textContent === 'AC')) key.textContent = 'AC'
+  if (keyType !== 'clear') { //if any button apart from 'clear', change AC to CE
+    clearButton.textContent = 'CE';
+  }
+
+  //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
+  const keys = Array.from(keysDiv.children)
+  const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
+  operatorKeys
+    .forEach(k => {
+      k.classList.remove('is-depressed')
+    })
 }
