@@ -15,11 +15,11 @@ keysDiv.addEventListener("click", e => {
   display.textContent = createResultString(key, displayedNum, calculator.dataset)
 
   //Handling the impure part (changing other variables accordingly)
-  updateCalculatorState(key, calculator.dataset, displayedNum)
+  updateCalculatorState(key, calculator, displayedNum)
 })
 
-const updateCalculatorState = (key, state, displayedNum) => {
-  const { firstValue, previousKeyType, modifierVal } = state
+const updateCalculatorState = (key, calculator, displayedNum) => {
+  const { firstValue, previousKeyType, modifierVal } = calculator.dataset
   const keyType = getKeyType(key)
   calculator.dataset.previousKeyType = keyType //set previous keyType at one point instead of in each case below
 
@@ -64,7 +64,7 @@ const createResultString = (key, displayedNum, state) => { //state param require
       operator &&
       previousKeyType !== 'operator' &&
       previousKeyType !== 'calculate'
-    ) ? calculate(firstValue, operator, display.textContent)
+    ) ? calculate(firstValue, operator, displayedNum)
       : displayedNum //in order not to return undefined if all conditions fail
 
   }
