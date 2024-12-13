@@ -9,28 +9,17 @@ keysDiv.addEventListener("click", e => {
   //all code below re-runs on each button-click
 
   const key = e.target
-  const { action } = key.dataset
   const displayedNum = display.textContent
 
   //Handling the pure functions (arithmetic to performs) with createResultString() and showing result on display
   display.textContent = createResultString(key, displayedNum, calculator.dataset)
 
   //Handling the impure part (changing other variables accordingly)
-
-  // ...
+  updateCalculatorState(key, calculator.dataset, displayedNum)
 })
 
-const updateCalculatorState = () => {
-  /*
-  required vars:
-
-  key
-  firstValue
-  previousKeyType
-  modifierVal
-  displayedNum
-  */
-
+const updateCalculatorState = (key, state, displayedNum) => {
+  const { firstValue, previousKeyType, modifierVal } = state
   const keyType = getKeyType(key)
   calculator.dataset.previousKeyType = keyType //set previous keyType at one point instead of in each case below
 
