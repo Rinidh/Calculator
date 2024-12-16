@@ -12,20 +12,27 @@ keysDiv.addEventListener("click", e => {
   const displayedNum = display.textContent
 
   //Handling the pure functions (arithmetic to performs) with createResultString() and showing result on display
-  display.textContent = createResultString(key, displayedNum, calculator.dataset)
+  const resultString = createResultString(key, displayedNum, calculator.dataset)
+  display.textContent = resultString
 
   //Handling the impure part (changing other variables accordingly)
-  updateCalculatorState(key, calculator, displayedNum)
+  updateCalculatorState(key, calculator, displayedNum, resultString)
 })
 
-const updateCalculatorState = (key, calculator, displayedNum) => {
-  const { firstValue, previousKeyType, modifierVal } = calculator.dataset
+const updateCalculatorState = (key, calculator, displayedNum, calculatedValue) => {
+  const { firstValue, previousKeyType, modifierVal, operator } = calculator.dataset
   const keyType = getKeyType(key)
   calculator.dataset.previousKeyType = keyType //set previous keyType at one point instead of in each case below
 
   if (keyType === "operator") {
-    calculator.dataset.firstValue = display.textContent //store these values for future use in calculation after the 2nd set of digits are clicked
-    calculator.dataset.operator = action
+    calculator.dataset.firstValue = firstValue &&
+      operator &&
+      previousKeyType !== 'operator' &&
+      previousKeyType !== 'calculate'
+      ? calculatedValue
+      : displayedNum
+
+    calculator.dataset.operator = key.dataset.action
   }
   if (keyType === 'clear') {
     if (key.textContent === 'AC') { //reset the stored data appropriately
@@ -36,7 +43,7 @@ const updateCalculatorState = (key, calculator, displayedNum) => {
     }
   }
   if (keyType === 'calculate') {
-    calculator.dataset.modifierVal = firstValue && previousKeyType === 'calculate'
+    calculator.dataset.modifierVal = (firstValue && previousKeyType === 'calculate')
       ? modifierVal
       : displayedNum
   }
@@ -104,6 +111,14 @@ function calculate(firstNum, operation, secondNum) {
 }
 
 function updateVisualState(key, calculator) {
+  //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
+  const keys = Array.from(key.parentNode.children) //easier not to use keysDiv (as we have to set it as param also) and rather access all keys from the single key in the param/argument
+  const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
+  operatorKeys
+    .forEach(k => {
+      k.classList.remove('is-depressed')
+    })
+
   const keyType = getKeyType(key)
 
   if (keyType === 'operator') key.classList.add("is-depressed");
@@ -112,12 +127,4 @@ function updateVisualState(key, calculator) {
     const clearButton = calculator.querySelector('[data-action=clear]') //better access the calculator as arg and access the clearButton from it. This makes updateVisualState() reusable in different projects
     clearButton.textContent = 'CE';
   }
-
-  //each time any key is pressed, all four operator buttons will have 'is-depressed' class removed
-  const keys = Array.from(key.parentNode.children) //easier not to use keysDiv (as we have to set it as param also) and rather access all keys from the single key in the param/argument
-  const operatorKeys = keys.filter(k => k.classList.contains('key--operator'))
-  operatorKeys
-    .forEach(k => {
-      k.classList.remove('is-depressed')
-    })
 }
